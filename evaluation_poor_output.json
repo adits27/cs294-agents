@@ -1,0 +1,127 @@
+{
+  "overall_score": 53.4,
+  "dimension_scores": {
+    "code_quality": 55.0,
+    "analytical_soundness": 55.0,
+    "report_clarity": 47.0
+  },
+  "evaluations": {
+    "code_quality": {
+      "score": 55.0,
+      "issues": [
+        "Snippet 2: Syntax error - invalid syntax (<unknown>, line 4)",
+        "Confidence interval lower bound must be less than upper bound",
+        "Effect size must be numeric"
+      ],
+      "recommendations": [
+        "Fix syntax errors in code snippets",
+        "Review statistical calculations for accuracy"
+      ],
+      "details": {
+        "code_analysis": {
+          "total_snippets": 2,
+          "syntax_errors": 1,
+          "statistical_functions_used": [
+            "chi2_contingency"
+          ],
+          "missing_imports": [],
+          "code_complexity": [
+            2
+          ]
+        },
+        "statistical_analysis": {
+          "p_value_validation": {
+            "valid": true,
+            "value": 0.08
+          },
+          "confidence_interval_validation": {},
+          "sample_size_validation": {
+            "valid": true,
+            "value": 50
+          },
+          "effect_size_validation": {}
+        }
+      }
+    },
+    "analytical_soundness": {
+      "score": 55.0,
+      "issues": [
+        "Null and alternative hypotheses are identical",
+        "Chi-square test inappropriate for continuous data",
+        "P-value >= significance level but conclusion says 'reject'"
+      ],
+      "recommendations": [],
+      "details": {
+        "hypothesis_analysis": {
+          "null_hypothesis": "No difference in conversion rates",
+          "alternative_hypothesis": "No difference in conversion rates",
+          "test_direction": "two-tailed",
+          "conclusion": "We reject the null hypothesis"
+        },
+        "test_analysis": {
+          "chosen_test": "chi-square test",
+          "data_type": "continuous",
+          "sample_size": 50,
+          "test_appropriateness": "inappropriate"
+        },
+        "interpretation_analysis": {
+          "p_value": 0.08,
+          "significance_level": 0.01,
+          "conclusion": "We reject the null hypothesis",
+          "interpretation_consistency": "inconsistent"
+        }
+      }
+    },
+    "report_clarity": {
+      "score": 47.0,
+      "issues": [
+        "Report is too short for comprehensive analysis"
+      ],
+      "recommendations": [
+        "Add an executive summary section",
+        "Include methodology section explaining statistical approach",
+        "Include conclusion section with final decision",
+        "Provide actionable recommendations based on results",
+        "Explain what p-value means in plain language",
+        "Explain confidence intervals in accessible terms",
+        "Use more plain language to explain statistical concepts",
+        "Consider including charts or tables to illustrate results",
+        "Connect results to business impact and KPIs",
+        "Provide insights about different user segments",
+        "Acknowledge limitations and caveats of the analysis"
+      ],
+      "details": {
+        "structure_analysis": {
+          "word_count": 12,
+          "has_executive_summary": false,
+          "has_methodology": false,
+          "has_results": true,
+          "has_conclusion": false,
+          "has_recommendations": false,
+          "section_count": 1
+        },
+        "communication_analysis": {
+          "explains_p_value": false,
+          "explains_confidence_interval": false,
+          "explains_significance_level": false,
+          "uses_plain_language": false,
+          "includes_visualizations": false
+        },
+        "insights_analysis": {
+          "has_business_impact": false,
+          "has_segmentation_insights": false,
+          "has_next_steps": true,
+          "has_limitations": false,
+          "insight_count": 1
+        }
+      }
+    }
+  },
+  "summary": {
+    "total_issues": 7,
+    "total_recommendations": 13,
+    "strongest_dimension": "code_quality",
+    "weakest_dimension": "report_clarity",
+    "overall_assessment": "Poor"
+  }
+}

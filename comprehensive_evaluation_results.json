@@ -1,0 +1,378 @@
+{
+  "good_output": {
+    "overall_score": 85.0,
+    "dimension_scores": {
+      "code_quality": 85.0,
+      "analytical_soundness": 100.0,
+      "report_clarity": 55.0
+    },
+    "evaluations": {
+      "code_quality": {
+        "score": 85.0,
+        "issues": [
+          "Snippet 2: Missing imports for ['scipy.stats']"
+        ],
+        "recommendations": [
+          "Add proper import statements for statistical functions"
+        ],
+        "details": {
+          "code_analysis": {
+            "total_snippets": 2,
+            "syntax_errors": 0,
+            "statistical_functions_used": [
+              "ttest_ind",
+              "proportion_confint"
+            ],
+            "missing_imports": [
+              "scipy.stats"
+            ],
+            "code_complexity": [
+              9,
+              9
+            ]
+          },
+          "statistical_analysis": {
+            "p_value_validation": {
+              "valid": true,
+              "value": 0.012
+            },
+            "confidence_interval_validation": {
+              "valid": true,
+              "value": [
+                0.015,
+                0.045
+              ]
+            },
+            "sample_size_validation": {
+              "valid": true,
+              "value": 2000
+            },
+            "effect_size_validation": {
+              "valid": true,
+              "value": 0.23
+            }
+          }
+        }
+      },
+      "analytical_soundness": {
+        "score": 100.0,
+        "issues": [],
+        "recommendations": [],
+        "details": {
+          "hypothesis_analysis": {
+            "null_hypothesis": "No difference in click-through rates between button variants",
+            "alternative_hypothesis": "Button variant B has higher click-through rate than variant A",
+            "test_direction": "one-tailed",
+            "conclusion": "We reject the null hypothesis and conclude that button variant B significantly outperforms variant A"
+          },
+          "test_analysis": {
+            "chosen_test": "t-test",
+            "data_type": "continuous",
+            "sample_size": 2000,
+            "test_appropriateness": "appropriate"
+          },
+          "interpretation_analysis": {
+            "p_value": 0.012,
+            "significance_level": 0.05,
+            "conclusion": "We reject the null hypothesis and conclude that button variant B significantly outperforms variant A",
+            "interpretation_consistency": "consistent"
+          }
+        }
+      },
+      "report_clarity": {
+        "score": 55.0,
+        "issues": [],
+        "recommendations": [
+          "Explain what p-value means in plain language",
+          "Use more plain language to explain statistical concepts"
+        ],
+        "details": {
+          "structure_analysis": {
+            "word_count": 268,
+            "has_executive_summary": true,
+            "has_methodology": true,
+            "has_results": true,
+            "has_conclusion": true,
+            "has_recommendations": true,
+            "section_count": 5
+          },
+          "communication_analysis": {
+            "explains_p_value": false,
+            "explains_confidence_interval": true,
+            "explains_significance_level": true,
+            "uses_plain_language": false,
+            "includes_visualizations": true
+          },
+          "insights_analysis": {
+            "has_business_impact": true,
+            "has_segmentation_insights": true,
+            "has_next_steps": true,
+            "has_limitations": true,
+            "insight_count": 4
+          }
+        }
+      }
+    },
+    "summary": {
+      "total_issues": 1,
+      "total_recommendations": 3,
+      "strongest_dimension": "analytical_soundness",
+      "weakest_dimension": "report_clarity",
+      "overall_assessment": "Good"
+    }
+  },
+  "poor_output": {
+    "overall_score": 53.4,
+    "dimension_scores": {
+      "code_quality": 55.0,
+      "analytical_soundness": 55.0,
+      "report_clarity": 47.0
+    },
+    "evaluations": {
+      "code_quality": {
+        "score": 55.0,
+        "issues": [
+          "Snippet 2: Syntax error - invalid syntax (<unknown>, line 4)",
+          "Confidence interval lower bound must be less than upper bound",
+          "Effect size must be numeric"
+        ],
+        "recommendations": [
+          "Fix syntax errors in code snippets",
+          "Review statistical calculations for accuracy"
+        ],
+        "details": {
+          "code_analysis": {
+            "total_snippets": 2,
+            "syntax_errors": 1,
+            "statistical_functions_used": [
+              "chi2_contingency"
+            ],
+            "missing_imports": [],
+            "code_complexity": [
+              2
+            ]
+          },
+          "statistical_analysis": {
+            "p_value_validation": {
+              "valid": true,
+              "value": 0.08
+            },
+            "confidence_interval_validation": {},
+            "sample_size_validation": {
+              "valid": true,
+              "value": 50
+            },
+            "effect_size_validation": {}
+          }
+        }
+      },
+      "analytical_soundness": {
+        "score": 55.0,
+        "issues": [
+          "Null and alternative hypotheses are identical",
+          "Chi-square test inappropriate for continuous data",
+          "P-value >= significance level but conclusion says 'reject'"
+        ],
+        "recommendations": [],
+        "details": {
+          "hypothesis_analysis": {
+            "null_hypothesis": "No difference in conversion rates",
+            "alternative_hypothesis": "No difference in conversion rates",
+            "test_direction": "two-tailed",
+            "conclusion": "We reject the null hypothesis"
+          },
+          "test_analysis": {
+            "chosen_test": "chi-square test",
+            "data_type": "continuous",
+            "sample_size": 50,
+            "test_appropriateness": "inappropriate"
+          },
+          "interpretation_analysis": {
+            "p_value": 0.08,
+            "significance_level": 0.01,
+            "conclusion": "We reject the null hypothesis",
+            "interpretation_consistency": "inconsistent"
+          }
+        }
+      },
+      "report_clarity": {
+        "score": 47.0,
+        "issues": [
+          "Report is too short for comprehensive analysis"
+        ],
+        "recommendations": [
+          "Add an executive summary section",
+          "Include methodology section explaining statistical approach",
+          "Include conclusion section with final decision",
+          "Provide actionable recommendations based on results",
+          "Explain what p-value means in plain language",
+          "Explain confidence intervals in accessible terms",
+          "Use more plain language to explain statistical concepts",
+          "Consider including charts or tables to illustrate results",
+          "Connect results to business impact and KPIs",
+          "Provide insights about different user segments",
+          "Acknowledge limitations and caveats of the analysis"
+        ],
+        "details": {
+          "structure_analysis": {
+            "word_count": 12,
+            "has_executive_summary": false,
+            "has_methodology": false,
+            "has_results": true,
+            "has_conclusion": false,
+            "has_recommendations": false,
+            "section_count": 1
+          },
+          "communication_analysis": {
+            "explains_p_value": false,
+            "explains_confidence_interval": false,
+            "explains_significance_level": false,
+            "uses_plain_language": false,
+            "includes_visualizations": false
+          },
+          "insights_analysis": {
+            "has_business_impact": false,
+            "has_segmentation_insights": false,
+            "has_next_steps": true,
+            "has_limitations": false,
+            "insight_count": 1
+          }
+        }
+      }
+    },
+    "summary": {
+      "total_issues": 7,
+      "total_recommendations": 13,
+      "strongest_dimension": "code_quality",
+      "weakest_dimension": "report_clarity",
+      "overall_assessment": "Poor"
+    }
+  },
+  "banner_output": {
+    "overall_score": 79.0,
+    "dimension_scores": {
+      "code_quality": 70.0,
+      "analytical_soundness": 100.0,
+      "report_clarity": 55.0
+    },
+    "evaluations": {
+      "code_quality": {
+        "score": 70.0,
+        "issues": [
+          "Snippet 1: Missing imports for ['scipy.stats']",
+          "Snippet 2: Missing imports for ['scipy.stats']"
+        ],
+        "recommendations": [
+          "Add proper import statements for statistical functions"
+        ],
+        "details": {
+          "code_analysis": {
+            "total_snippets": 2,
+            "syntax_errors": 0,
+            "statistical_functions_used": [
+              "proportion_confint"
+            ],
+            "missing_imports": [
+              "scipy.stats",
+              "scipy.stats"
+            ],
+            "code_complexity": [
+              9,
+              10
+            ]
+          },
+          "statistical_analysis": {
+            "p_value_validation": {
+              "valid": true,
+              "value": 0.001
+            },
+            "confidence_interval_validation": {
+              "valid": true,
+              "value": [
+                0.008,
+                0.025
+              ]
+            },
+            "sample_size_validation": {
+              "valid": true,
+              "value": 5000
+            },
+            "effect_size_validation": {
+              "valid": true,
+              "value": 0.15
+            }
+          }
+        }
+      },
+      "analytical_soundness": {
+        "score": 100.0,
+        "issues": [],
+        "recommendations": [],
+        "details": {
+          "hypothesis_analysis": {
+            "null_hypothesis": "No difference in banner click rates between designs",
+            "alternative_hypothesis": "Banner design B has higher click rate than design A",
+            "test_direction": "one-tailed",
+            "conclusion": "We reject the null hypothesis and conclude that Banner B significantly outperforms Banner A"
+          },
+          "test_analysis": {
+            "chosen_test": "z-test for proportions",
+            "data_type": "categorical",
+            "sample_size": 5000,
+            "test_appropriateness": "appropriate"
+          },
+          "interpretation_analysis": {
+            "p_value": 0.001,
+            "significance_level": 0.05,
+            "conclusion": "We reject the null hypothesis and conclude that Banner B significantly outperforms Banner A",
+            "interpretation_consistency": "consistent"
+          }
+        }
+      },
+      "report_clarity": {
+        "score": 55.0,
+        "issues": [],
+        "recommendations": [
+          "Include conclusion section with final decision",
+          "Explain what p-value means in plain language",
+          "Explain confidence intervals in accessible terms",
+          "Use more plain language to explain statistical concepts",
+          "Consider including charts or tables to illustrate results",
+          "Provide insights about different user segments"
+        ],
+        "details": {
+          "structure_analysis": {
+            "word_count": 174,
+            "has_executive_summary": true,
+            "has_methodology": true,
+            "has_results": true,
+            "has_conclusion": false,
+            "has_recommendations": true,
+            "section_count": 4
+          },
+          "communication_analysis": {
+            "explains_p_value": false,
+            "explains_confidence_interval": false,
+            "explains_significance_level": true,
+            "uses_plain_language": false,
+            "includes_visualizations": false
+          },
+          "insights_analysis": {
+            "has_business_impact": true,
+            "has_segmentation_insights": false,
+            "has_next_steps": true,
+            "has_limitations": true,
+            "insight_count": 3
+          }
+        }
+      }
+    },
+    "summary": {
+      "total_issues": 2,
+      "total_recommendations": 7,
+      "strongest_dimension": "analytical_soundness",
+      "weakest_dimension": "report_clarity",
+      "overall_assessment": "Satisfactory"
+    }
+  }
+}
