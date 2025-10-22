@@ -1,52 +1,60 @@
-# Green Agent - A/B Testing Analysis Evaluator
+# Green Agent - LLM-Based A/B Testing Evaluator
 
-The Green Agent is a comprehensive evaluation system designed to benchmark and assess White Agents that perform A/B testing analysis. It evaluates White Agent outputs across three critical dimensions to ensure high-quality statistical analysis and reporting.
+A sophisticated evaluation system that uses Google Gemini LLM to assess A/B testing analysis quality across three dimensions: Code Quality, Analytical Soundness, and Report Clarity.
 
-## Overview
+## 🚀 Features
 
-The Green Agent evaluates White Agent performance across three key dimensions:
+- **LLM-Powered Evaluation**: Uses Google Gemini 2.0 Flash for intelligent assessment
+- **Multi-Dimensional Analysis**: Evaluates code quality, analytical soundness, and report clarity
+- **Detailed Feedback**: Provides specific issues and actionable recommendations
+- **Comprehensive Scoring**: 0-100 scoring system with detailed reasoning
+- **JSON Output**: Structured results for easy integration
+- **Robust Testing**: Extensive test suite with mock and integration tests
 
-1. **Code Quality & Statistical Accuracy** (40% weight)
-   - Syntax validation and code structure
-   - Statistical function usage and imports
-   - Accuracy of p-values, confidence intervals, and sample size calculations
-   - Validation against standard statistical libraries
+## 📋 Requirements
 
-2. **Analytical Soundness** (40% weight)
-   - Hypothesis consistency and logical flow
-   - Appropriateness of statistical test selection
-   - Correct interpretation of results
-   - Alignment between conclusions and statistical evidence
+- Python 3.7+
+- Google Gemini API key
+- Required packages (see `requirements.txt`)
 
-3. **Report Clarity & Insightfulness** (20% weight)
-   - Report structure and organization
-   - Statistical concept communication
-   - Business impact and actionable insights
-   - Segmentation analysis and recommendations
+## 🛠️ Installation
 
-## Features
+1. **Clone the repository**:
+   ```bash
+   git clone <your-repo-url>
+   cd cs294-agents
+   ```
 
-- **Comprehensive Evaluation**: Multi-dimensional assessment covering technical accuracy, analytical rigor, and communication quality
-- **Automated Scoring**: Weighted scoring system with detailed issue identification and recommendations
-- **Benchmarking Framework**: Support for evaluating multiple White Agent runs and generating comparative reports
-- **Detailed Reporting**: Human-readable evaluation reports with specific feedback and improvement suggestions
-- **Statistical Validation**: Cross-validation of statistical calculations using scipy.stats and statsmodels
-- **Extensible Design**: Modular architecture allowing easy addition of new evaluation criteria
+2. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-## Installation
+3. **Set up environment variables**:
+   ```bash
+   cp .env.example .env
+   # Edit .env and add your Google API key
+   ```
 
-1. Clone the repository:
+4. **Get your Google Gemini API key**:
+   - Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
+   - Create a new API key
+   - Copy the key to your `.env` file
+
+## 🔧 Configuration
+
+Create a `.env` file with your API credentials:
+
 ```bash
-git clone <repository-url>
-cd cs294-agents
+# Google Gemini API Configuration
+GOOGLE_API_KEY=your_google_api_key_here
+GOOGLE_MODEL=gemini-2.0-flash
+
+# Logging Configuration
+LOG_LEVEL=INFO
 ```
 
-2. Install dependencies:
-```bash
-pip install -r requirements.txt
-```
-
-## Quick Start
+## 📖 Usage
 
 ### Basic Usage
 
@@ -54,182 +62,94 @@ pip install -r requirements.txt
 from green_agent import GreenAgent, WhiteAgentOutput
 
 # Initialize the Green Agent
-green_agent = GreenAgent()
+agent = GreenAgent()
 
-# Create White Agent output (your A/B testing analysis)
+# Create sample White Agent output
 white_output = WhiteAgentOutput(
-    think_phase={
-        'null_hypothesis': 'No difference in conversion rates',
-        'alternative_hypothesis': 'Variant B has higher conversion rate',
-        'significance_level': 0.05,
-        'data_type': 'continuous'
-    },
-    plan_phase={
-        'statistical_test': 't-test',
-        'sample_size': 1000,
-        'minimum_detectable_effect': 0.02
-    },
-    act_phase={
-        'p_value': 0.03,
-        'confidence_interval': [0.01, 0.05],
-        'effect_size': 0.15
-    },
-    measure_phase={
-        'conclusion': 'We reject the null hypothesis'
-    },
-    code_snippets=[
-        'from scipy.stats import ttest_ind\n# ... your statistical code'
-    ],
-    final_report="Your comprehensive A/B test report..."
+    plan="A/B test for button color change",
+    do="Chi-square test results: p=0.03",
+    act="Confidence interval: [0.02, 0.08], Effect size: 0.15"
 )
 
-# Evaluate the White Agent output
-results = green_agent.evaluate_white_agent(white_output)
+# Evaluate the output
+results = agent.evaluate_white_agent(white_output)
 
-# Generate human-readable report
-report = green_agent.generate_evaluation_report(results)
-print(report)
+# View results
+print(f"Overall Score: {results['overall_score']}/100")
+print(f"Assessment: {results['assessment']}")
 ```
 
-### Running Example Scenarios
+### Running Examples
 
 ```bash
-python example_usage.py
+# Run the example
+python3 example_llm_usage.py
+
+# View results
+python3 view_results.py
+
+# Run tests
+python3 test_llm_mocks.py
+python3 test_green_agent_enhanced.py
 ```
 
-This will run comprehensive evaluations on multiple test scenarios and demonstrate the benchmarking framework.
+## 📊 Output Format
 
-## Architecture
+The Green Agent provides detailed evaluation results:
 
-### Core Components
-
-1. **GreenAgent**: Main orchestrator class that coordinates all evaluations
-2. **CodeQualityEvaluator**: Evaluates code syntax, statistical accuracy, and function usage
-3. **AnalyticalSoundnessEvaluator**: Assesses hypothesis consistency and test appropriateness
-4. **ReportClarityEvaluator**: Evaluates report structure and communication quality
-
-### Data Structures
-
-- **WhiteAgentOutput**: Container for White Agent's four-phase output
-- **EvaluationResult**: Structured results for each evaluation dimension
-- **BenchmarkingFramework**: System for comparing multiple White Agent runs
-
-## Evaluation Criteria
-
-### Code Quality & Statistical Accuracy
-- ✅ Syntax validation and error detection
-- ✅ Proper import statements for statistical libraries
-- ✅ Correct usage of statistical functions (scipy.stats, statsmodels)
-- ✅ Validation of p-values (0 ≤ p ≤ 1)
-- ✅ Confidence interval validation (lower < upper bound)
-- ✅ Sample size and effect size validation
-- ✅ Code complexity assessment
-
-### Analytical Soundness
-- ✅ Null and alternative hypothesis consistency
-- ✅ Statistical test appropriateness for data type
-- ✅ Sample size adequacy for chosen test
-- ✅ Correct interpretation of p-values vs significance level
-- ✅ Logical consistency between results and conclusions
-- ✅ Test direction alignment (one-tailed vs two-tailed)
-
-### Report Clarity & Insightfulness
-- ✅ Report structure completeness (executive summary, methodology, results, conclusions)
-- ✅ Statistical concept explanation in plain language
-- ✅ Business impact and KPI connections
-- ✅ Segmentation insights and recommendations
-- ✅ Acknowledgment of limitations and caveats
-- ✅ Actionable next steps and recommendations
-
-## Scoring System
-
-The Green Agent uses a weighted scoring system:
-
-- **Overall Score**: Weighted average of all three dimensions
-- **Code Quality**: 40% weight
-- **Analytical Soundness**: 40% weight  
-- **Report Clarity**: 20% weight
-
-Scores range from 0-100 with the following assessments:
-- 90-100: Excellent
-- 80-89: Good
-- 70-79: Satisfactory
-- 60-69: Needs Improvement
-- 0-59: Poor
-
-## Benchmarking Framework
-
-The Green Agent includes a comprehensive benchmarking system for evaluating multiple White Agent runs:
-
-```python
-from example_usage import create_benchmarking_framework
-
-# Create benchmarking framework
-benchmark = create_benchmarking_framework()
-
-# Add multiple White Agent runs
-benchmark.add_white_agent_run("run_1", white_output_1, metadata={"test_type": "button_test"})
-benchmark.add_white_agent_run("run_2", white_output_2, metadata={"test_type": "banner_test"})
-
-# Generate comprehensive benchmark report
-report = benchmark.generate_benchmark_report()
-print(report)
-
-# Save results
-benchmark.save_benchmark_results("my_benchmark.json")
-```
-
-## Example Scenarios
-
-The system includes three example scenarios:
-
-1. **Good Output**: Well-structured A/B test with proper statistical analysis
-2. **Poor Output**: Contains multiple issues (wrong test, syntax errors, logical inconsistencies)
-3. **Banner Test**: Real-world banner A/B testing scenario
-
-## Output Files
-
-The Green Agent generates several output files:
-
-- `evaluation_results.json`: Detailed evaluation results in JSON format
-- `evaluation_report.txt`: Human-readable evaluation report
-- `benchmark_results.json`: Comprehensive benchmarking data
-- Individual scenario files: `evaluation_good_output.json`, etc.
-
-## Customization
-
-### Adding New Evaluation Criteria
-
-To add new evaluation criteria, extend the appropriate evaluator class:
-
-```python
-class CustomEvaluator:
-    def evaluate(self, white_output: WhiteAgentOutput) -> EvaluationResult:
-        # Your custom evaluation logic
-        pass
-```
-
-### Modifying Scoring Weights
-
-Adjust the weights in the `GreenAgent._calculate_overall_score()` method:
-
-```python
-weights = {
-    EvaluationDimension.CODE_QUALITY: 0.4,      # Adjust as needed
-    EvaluationDimension.ANALYTICAL_SOUNDNESS: 0.4,  # Adjust as needed
-    EvaluationDimension.REPORT_CLARITY: 0.2     # Adjust as needed
+```json
+{
+  "overall_score": 83.0,
+  "evaluation_method": "LLM",
+  "dimension_scores": {
+    "code_quality": 85.0,
+    "analytical_soundness": 85.0,
+    "report_clarity": 75.0
+  },
+  "evaluations": {
+    "code_quality": {
+      "score": 85.0,
+      "issues": ["Issue 1", "Issue 2"],
+      "recommendations": ["Recommendation 1", "Recommendation 2"]
+    }
+  }
 }
 ```
 
-## Testing
+## 🧪 Testing
 
-Run the test suite:
+The project includes comprehensive tests:
 
+- **Unit Tests**: `test_green_agent_enhanced.py`
+- **LLM Mock Tests**: `test_llm_mocks.py`
+- **Integration Tests**: `test_llm_integration.py`
+
+Run all tests:
 ```bash
-python -m pytest tests/ -v
+python3 run_tests.py
 ```
 
-## Contributing
+## 📁 Project Structure
+
+```
+cs294-agents/
+├── green_agent.py              # Main Green Agent implementation
+├── example_llm_usage.py       # Usage example
+├── view_results.py            # Results viewer
+├── test_*.py                  # Test suites
+├── requirements.txt           # Dependencies
+├── .env.example              # Environment template
+├── .gitignore                # Git ignore rules
+└── README.md                 # This file
+```
+
+## 🔒 Security
+
+- **Never commit your `.env` file** - it contains your API key
+- Use `.env.example` as a template
+- The `.gitignore` file protects sensitive files
+
+## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch
@@ -237,14 +157,20 @@ python -m pytest tests/ -v
 4. Add tests for new functionality
 5. Submit a pull request
 
-## License
+## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is part of CS294 coursework.
 
-## Support
+## 🆘 Troubleshooting
 
-For questions, issues, or contributions, please open an issue on the GitHub repository.
+### Common Issues
 
----
+1. **API Key Error**: Make sure your `GOOGLE_API_KEY` is set in `.env`
+2. **Model Not Found**: Ensure you're using `gemini-2.0-flash` or another available model
+3. **Import Errors**: Run `pip install -r requirements.txt`
 
-**Note**: This Green Agent is specifically designed for evaluating A/B testing analysis agents. It focuses on UI/UX testing scenarios including button changes, banner modifications, and other interface variations commonly tested in A/B experiments.
+### Getting Help
+
+- Check the test files for usage examples
+- Review the `example_llm_usage.py` for basic usage
+- Run `python3 view_results.py` to see output format

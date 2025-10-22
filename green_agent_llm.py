@@ -1,25 +1,23 @@
 """
 Green Agent - LLM-based A/B Testing Analysis Evaluator
 
-This agent uses Google Gemini to evaluate the White Agent's A/B testing analysis across three dimensions:
+This agent uses OpenAI ChatGPT to evaluate the White Agent's A/B testing analysis across three dimensions:
 1. Code Quality & Statistical Accuracy
 2. Analytical Soundness  
 3. Report Clarity & Insightfulness
-
-This is an LLM-only implementation that requires Google Gemini API access.
 """
 
-import json
-import pandas as pd
-from typing import Dict, List, Tuple, Any, Optional
-from dataclasses import dataclass
-from enum import Enum
-import logging
 import os
-
-# LLM imports (required)
-import google.generativeai as genai
+import json
+import logging
+from typing import Dict, List, Tuple, Any, Optional
+from dataclasses import dataclass, asdict
+from enum import Enum
+import pandas as pd
+from openai import OpenAI
 from dotenv import load_dotenv
+
+# Load environment variables
 load_dotenv()
 
 # Configure logging
@@ -41,7 +39,7 @@ class EvaluationResult:
     details: Dict[str, Any]
     issues: List[str]
     recommendations: List[str]
-    reasoning: Optional[str] = None  # LLM reasoning (if available)
+    reasoning: str  # LLM's reasoning for the evaluation
 
 
 @dataclass
@@ -57,24 +55,22 @@ class WhiteAgentOutput:
 
 
 class LLMEvaluator:
-    """LLM-based evaluator using Google Gemini"""
+    """LLM-based evaluator using OpenAI ChatGPT"""
     
-    def __init__(self, api_key: Optional[str] = None, model: str = "gemini-2.0-flash"):
+    def __init__(self, api_key: Optional[str] = None, model: str = "gpt-4"):
         """
         Initialize the LLM evaluator
         
         Args:
-            api_key: Google API key. If None, will try to get from environment variable GOOGLE_API_KEY
-            model: Google model to use (default: gemini-2.0-flash)
+            api_key: OpenAI API key. If None, will try to get from environment variable OPENAI_API_KEY
+            model: OpenAI model to use (default: gpt-4)
         """
-        self.api_key = api_key or os.getenv("GOOGLE_API_KEY")
+        self.api_key = api_key or os.getenv("OPENAI_API_KEY")
         if not self.api_key:
-            raise ValueError("Google API key is required. Set GOOGLE_API_KEY environment variable or pass api_key parameter.")
+            raise ValueError("OpenAI API key is required. Set OPENAI_API_KEY environment variable or pass api_key parameter.")
         
-        # Configure Gemini
-        genai.configure(api_key=self.api_key)
-        self.model = genai.GenerativeModel(model)
-        self.model_name = model
+        self.client = OpenAI(api_key=self.api_key)
+        self.model = model
         logger.info(f"LLM Evaluator initialized with model: {model}")
     
     def evaluate_dimension(self, white_output: WhiteAgentOutput, dimension: EvaluationDimension) -> EvaluationResult:
@@ -91,15 +87,17 @@ class LLMEvaluator:
         prompt = self._create_evaluation_prompt(white_output, dimension)
         
         try:
-            response = self.model.generate_content(
-                prompt,
-                generation_config=genai.types.GenerationConfig(
-                    temperature=0.3,  # Lower temperature for more consistent evaluations
-                    max_output_tokens=2000
-                )
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=[
+                    {"role": "system", "content": self._get_system_prompt(dimension)},
+                    {"role": "user", "content": prompt}
+                ],
+                temperature=0.3,  # Lower temperature for more consistent evaluations
+                max_tokens=2000
             )
             
-            evaluation_text = response.text
+            evaluation_text = response.choices[0].message.content
             return self._parse_evaluation_response(evaluation_text, dimension)
             
         except Exception as e:
@@ -155,11 +153,7 @@ class LLMEvaluator:
     
     def _create_evaluation_prompt(self, white_output: WhiteAgentOutput, dimension: EvaluationDimension) -> str:
         """Create evaluation prompt for the LLM"""
-        system_prompt = self._get_system_prompt(dimension)
-        
         prompt_parts = [
-            system_prompt,
-            "",
             f"Please evaluate the following A/B testing analysis for {dimension.value.replace('_', ' ')}:",
             "",
             "=== WHITE AGENT OUTPUT ===",
@@ -235,25 +229,19 @@ class LLMEvaluator:
         )
 
 
-
-
-class GreenAgent:
+class GreenAgentLLM:
     """Main Green Agent class that uses LLM for evaluation"""
     
-    def __init__(self, api_key: Optional[str] = None, model: Optional[str] = None):
+    def __init__(self, api_key: Optional[str] = None, model: str = "gpt-4"):
         """
         Initialize the LLM-based Green Agent
         
         Args:
-            api_key: Google API key for LLM evaluation
-            model: Google model to use for LLM evaluation (default: from .env or gemini-2.0-flash)
+            api_key: OpenAI API key. If None, will try to get from environment variable OPENAI_API_KEY
+            model: OpenAI model to use (default: gpt-4)
         """
-        # Use model from environment if not specified
-        if model is None:
-            model = os.getenv("GOOGLE_MODEL", "gemini-2.0-flash")
-        
         self.llm_evaluator = LLMEvaluator(api_key=api_key, model=model)
-        logger.info("Green Agent initialized with LLM evaluation")
+        logger.info("Green Agent LLM initialized successfully")
     
     def evaluate_white_agent(self, white_output: WhiteAgentOutput) -> Dict[str, Any]:
         """
@@ -267,7 +255,7 @@ class GreenAgent:
         """
         logger.info("Starting LLM-based evaluation of White Agent output")
         
-        # Run evaluations for all three dimensions using LLM
+        # Run evaluations for all three dimensions
         code_quality_result = self.llm_evaluator.evaluate_dimension(white_output, EvaluationDimension.CODE_QUALITY)
         analytical_soundness_result = self.llm_evaluator.evaluate_dimension(white_output, EvaluationDimension.ANALYTICAL_SOUNDNESS)
         report_clarity_result = self.llm_evaluator.evaluate_dimension(white_output, EvaluationDimension.REPORT_CLARITY)
@@ -282,7 +270,6 @@ class GreenAgent:
         # Compile comprehensive results
         evaluation_results = {
             'overall_score': overall_score,
-            'evaluation_method': 'LLM',
             'dimension_scores': {
                 'code_quality': code_quality_result.score,
                 'analytical_soundness': analytical_soundness_result.score,
@@ -318,7 +305,7 @@ class GreenAgent:
             ])
         }
         
-        logger.info(f"Evaluation completed. Overall score: {overall_score}")
+        logger.info(f"LLM evaluation completed. Overall score: {overall_score}")
         return evaluation_results
     
     def _calculate_overall_score(self, results: List[EvaluationResult]) -> float:
@@ -377,7 +364,6 @@ class GreenAgent:
         report.append("OVERALL SUMMARY")
         report.append("-" * 20)
         report.append(f"Overall Score: {evaluation_results['overall_score']}/100")
-        report.append(f"Evaluation Method: {evaluation_results.get('evaluation_method', 'Unknown')}")
         report.append(f"Assessment: {evaluation_results['summary']['overall_assessment']}")
         report.append(f"Total Issues Found: {evaluation_results['summary']['total_issues']}")
         report.append(f"Total Recommendations: {evaluation_results['summary']['total_recommendations']}")
@@ -397,10 +383,10 @@ class GreenAgent:
             report.append(f"Score: {eval_data['score']}/100")
             report.append("")
             
-            if eval_data.get('reasoning'):
-                report.append("Evaluation Reasoning:")
+            if eval_data['reasoning']:
+                report.append("LLM Reasoning:")
                 report.append(eval_data['reasoning'])
-            report.append("")
+                report.append("")
             
             if eval_data['issues']:
                 report.append("Issues Found:")
@@ -463,18 +449,23 @@ def create_sample_white_output() -> WhiteAgentOutput:
 
 if __name__ == "__main__":
     # Example usage
-    green_agent = GreenAgent()
-    sample_output = create_sample_white_output()
-    
-    # Run evaluation
-    results = green_agent.evaluate_white_agent(sample_output)
-    
-    # Generate and print report
-    report = green_agent.generate_evaluation_report(results)
-    print(report)
-    
-    # Save results to JSON
-    with open('evaluation_results.json', 'w') as f:
-        json.dump(results, f, indent=2)
-    
-    print("\nEvaluation results saved to 'evaluation_results.json'")
+    try:
+        green_agent = GreenAgentLLM()
+        sample_output = create_sample_white_output()
+        
+        # Run evaluation
+        results = green_agent.evaluate_white_agent(sample_output)
+        
+        # Generate and print report
+        report = green_agent.generate_evaluation_report(results)
+        print(report)
+        
+        # Save results to JSON
+        with open('evaluation_results_llm.json', 'w') as f:
+            json.dump(results, f, indent=2)
+        
+        print("\nEvaluation results saved to 'evaluation_results_llm.json'")
+        
+    except Exception as e:
+        print(f"Error running Green Agent LLM: {str(e)}")
+        print("Make sure to set your OPENAI_API_KEY environment variable")
